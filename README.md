@@ -9,8 +9,8 @@ A Streamlit chat interface for [Ollama](https://ollama.com). Runs 100% locally -
 ## Screenshots
 
 <p align="center">
-  <img src="assets/screenshot1.png" alt="Main Interface" width="48%">
-  <img src="assets/screenshot2.png" alt="Chat Response" width="48%">
+  <img src="LLM1.png" alt="Main Interface" width="48%">
+  <img src="LLM2.png" alt="Chat Response" width="48%">
 </p>
 
 ## Features
@@ -26,37 +26,48 @@ A Streamlit chat interface for [Ollama](https://ollama.com). Runs 100% locally -
 
 The application operates on a simple client-server model, optimized for local execution and real-time streaming.
 
-```mermaid
-graph TD
-    %% Entities
-    User([User])
-    Streamlit[Streamlit App - app.py]
-    OllamaServer[Ollama Server - localhost:11434]
-    LLM[Local LLM - llama3.2:3b]
-
-    %% Internal Streamlit Components
-    subgraph Streamlit App
-        UI[UI Renderer - HTML/CSS]
-        Sidebar[Sidebar Controls]
-        SessionState[(Session State)]
-        APIClient[Ollama API Client]
-    end
-
-    %% Flow
-    User -->|Interacts with UI| Sidebar
-    User -->|Submits Prompt| UI
-    
-    Sidebar -->|Sets Host, Model, Parameters| SessionState
-    UI -->|Appends User Message| SessionState
-    SessionState -->|Payload: Messages + Options| APIClient
-
-    APIClient -->|GET /api/tags| OllamaServer
-    APIClient -->|POST /api/chat stream=true| OllamaServer
-
-    OllamaServer -->|Loads Model Weights| LLM
-    LLM -->|Generates Tokens| OllamaServer
-    OllamaServer -->|Streams JSON Chunks| APIClient
-
-    APIClient -->|Updates Response String| UI
-    UI -->|Renders Chat Bubbles| User
-    SessionState -->|Appends Assistant Response| SessionState
+```text
++-----------------------+
+|         User          |
++-----------------------+
+           |
+           | Inputs Prompt / Adjusts Settings
+           v
++-----------------------+
+|   Streamlit Frontend  |
+|     (app.py)          |
++-----------------------+
+           |
+           | 1. Constructs JSON Payload
+           |    (messages, temperature, top_p, num_predict)
+           |
+           | 2. HTTP POST /api/chat (stream=true)
+           v
++-----------------------+
+|    Ollama Server      |
+|  (localhost:11434)    |
++-----------------------+
+           |
+           | 3. Processes Payload
+           v
++-----------------------+
+|      Local LLM        |
+|     (llama3.2:3b)     |
++-----------------------+
+           |
+           | 4. Generates Tokens sequentially
+           | 5. Streams JSON chunks back to Streamlit
+           v
++-----------------------+
+|   Streamlit Frontend  |
+|  Updates UI in real-  |
+|  time via placeholder |
++-----------------------+
+           |
+           | 6. Saves assistant response
+           |    to session state
+           v
++-----------------------+
+|         User          |
+|    Views Response     |
++-----------------------+
