@@ -6,6 +6,10 @@ A Streamlit chat interface for [Ollama](https://ollama.com). Runs 100% locally -
 ![Streamlit](https://img.shields.io/badge/streamlit-1.28+-red)
 ![License](https://img.shields.io/badge/license-MIT-green)
 
+## Screenshot
+
+![Local LLM Chat Interface](assets/screenshot.png)
+
 ## Features
 
 - Streaming chat responses
@@ -15,16 +19,41 @@ A Streamlit chat interface for [Ollama](https://ollama.com). Runs 100% locally -
 - New Chat / history reset
 - Works on Linux, macOS, and Windows
 
-## Requirements
+## Architecture
 
-- [Ollama](https://ollama.com/download) installed and running
-- Python 3.10 or newer
-- At least one model pulled, e.g. `ollama pull llama3.2:3b`
+The application operates on a simple client-server model, optimized for local execution and real-time streaming.
 
-## Setup
+```mermaid
+graph TD
+    %% Entities
+    User([User])
+    Streamlit[Streamlit App - app.py]
+    OllamaServer[Ollama Server - localhost:11434]
+    LLM[Local LLM - llama3.2:3b]
 
-### 1. Install Ollama
+    %% Internal Streamlit Components
+    subgraph Streamlit App
+        UI[UI Renderer - HTML/CSS]
+        Sidebar[Sidebar Controls]
+        SessionState[(Session State)]
+        APIClient[Ollama API Client]
+    end
 
-Linux / macOS:
-```bash
-curl -fsSL https://ollama.com/install.sh | sh
+    %% Flow
+    User -->|Interacts with UI| Sidebar
+    User -->|Submits Prompt| UI
+    
+    Sidebar -->|Sets Host, Model, Parameters| SessionState
+    UI -->|Appends User Message| SessionState
+    SessionState -->|Payload: Messages + Options| APIClient
+
+    APIClient -->|GET /api/tags| OllamaServer
+    APIClient -->|POST /api/chat stream=true| OllamaServer
+
+    OllamaServer -->|Loads Model Weights| LLM
+    LLM -->|Generates Tokens| OllamaServer
+    OllamaServer -->|Streams JSON Chunks| APIClient
+
+    APIClient -->|Updates Response String| UI
+    UI -->|Renders Chat Bubbles| User
+    SessionState -->|Appends Assistant Response| SessionState
