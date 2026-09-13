@@ -72,24 +72,3 @@ The application operates on a simple client-server model, optimized for local ex
 
 
 
-## How It Works
-
-1. **Frontend (Streamlit):** Manages the UI, sidebar settings, and conversation history using `session_state`.
-2. **API Communication:** Sends HTTP requests to the local Ollama server. Queries `/api/tags` for available models and POSTs prompts to `/api/chat`.
-3. **Backend (Ollama):** Receives the payload, loads the specified model into memory, and generates text.
-4. **Streaming:** Uses `stream=true` to receive small JSON chunks from Ollama, creating a real-time typing effect in the UI.
-5. **State Management:** Appends the completed response to `session_state.messages` to preserve chat history.
-
-## Requirements
-
-- [Ollama](https://ollama.com/download) installed and running
-- Python 3.10 or newer
-- At least one model pulled, e.g., `ollama pull llama3.2:3b`
-
-## Setup
-
-### 1. Install Ollama
-
-**Linux / macOS:**
-```bash
-curl -fsSL https://ollama.com/install.sh | sh
