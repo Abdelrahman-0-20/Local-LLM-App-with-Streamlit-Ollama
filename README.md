@@ -2,9 +2,6 @@
 
 A Streamlit chat interface for [Ollama](https://ollama.com). Runs 100% locally - no data leaves your machine, no API keys, no cloud.
 
-![Python](https://img.shields.io/badge/python-3.10+-blue)
-![Streamlit](https://img.shields.io/badge/streamlit-1.28+-red)
-![License](https://img.shields.io/badge/license-MIT-green)
 
 ## Screenshots
 
