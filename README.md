@@ -6,9 +6,12 @@ A Streamlit chat interface for [Ollama](https://ollama.com). Runs 100% locally -
 ![Streamlit](https://img.shields.io/badge/streamlit-1.28+-red)
 ![License](https://img.shields.io/badge/license-MIT-green)
 
-## Screenshot
+## Screenshots
 
-![Local LLM Chat Interface](assets/screenshot.png)
+<p align="center">
+  <img src="assets/screenshot1.png" alt="Main Interface" width="48%">
+  <img src="assets/screenshot2.png" alt="Chat Response" width="48%">
+</p>
 
 ## Features
 
