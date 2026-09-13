@@ -4,7 +4,7 @@ import requests
 import json
 from datetime import datetime
 
-# ── Page config ──────────────────────────────────────────────────────────────
+#  Page config 
 st.set_page_config(
     page_title="Local LLM Chat",
     page_icon="",
@@ -12,7 +12,7 @@ st.set_page_config(
     initial_sidebar_state="expanded",
 )
 
-# ── Custom CSS ───────────────────────────────────────────────────────────────
+#  Custom CSS ─
 st.markdown("""
 <style>
     .main-header {
@@ -62,7 +62,7 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 
-# ── Ollama helpers ───────────────────────────────────────────────────────────
+#  Ollama helpers ─
 def get_ollama_host():
     """Return the Ollama base URL from secrets, env, or default.
 
@@ -124,7 +124,7 @@ def chat(host, model, messages, stream=True):
             yield r.json()
 
 
-# ── Session state init ───────────────────────────────────────────────────────
+#  Session state init ─
 if "messages" not in st.session_state:
     st.session_state.messages = []
 if "chat_id" not in st.session_state:
@@ -137,7 +137,7 @@ if "num_predict" not in st.session_state:
     st.session_state.num_predict = 2048
 
 
-# ── Sidebar ──────────────────────────────────────────────────────────────────
+#  Sidebar 
 with st.sidebar:
     st.title("Settings")
 
@@ -179,7 +179,7 @@ with st.sidebar:
     st.caption("Private & Local - all data stays on your machine.")
 
 
-# ── Main area ────────────────────────────────────────────────────────────────
+#  Main area 
 st.markdown("""
 <div class="main-header">
     <h1>Local LLM Chat</h1>
@@ -196,7 +196,7 @@ if models:
         col2.metric("Modified", m.get("modified_at", "unknown")[:10])
         col3.metric("Details", m.get("details", {}).get("parameter_size", "?"))
 
-# ── Chat history render ──────────────────────────────────────────────────────
+#  Chat history render 
 container = st.container()
 
 with container:
@@ -209,7 +209,7 @@ with container:
             unsafe_allow_html=True,
         )
 
-# ── Input ────────────────────────────────────────────────────────────────────
+#  Input 
 prompt = st.chat_input("Ask anything ...")
 
 if prompt and online and selected_model:
